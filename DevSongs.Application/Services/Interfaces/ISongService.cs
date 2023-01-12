@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DevSongs.Application.Services.Interfaces
 {
-    public interface ISongRegisterService
+    public interface ISongService
     {
         List<SongViewModel> GetAll(string query);
         SongViewModel GetById(int id);

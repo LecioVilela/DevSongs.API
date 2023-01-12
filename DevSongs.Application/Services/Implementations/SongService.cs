@@ -1,4 +1,5 @@
-﻿using DevSongs.Application.InputModels;
+﻿using AutoMapper;
+using DevSongs.Application.InputModels;
 using DevSongs.Application.Services.Interfaces;
 using DevSongs.Application.ViewModels;
 using DevSongs.Core.Entities;
@@ -11,13 +12,16 @@ using System.Threading.Tasks;
 
 namespace DevSongs.Application.Services.Implementations
 {
-    public class SongRegisterService : ISongRegisterService
+    public class SongService : ISongService
     {
+        // alterar depois para SongService
         private readonly DevSongsDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public SongRegisterService(DevSongsDbContext dbContext)
+        public SongService(DevSongsDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public int Create(NewSongInputModel inputModel)
@@ -32,29 +36,33 @@ namespace DevSongs.Application.Services.Implementations
 
         public void Delete(int id)
         {
-            var song = _dbContext.Songs.FirstOrDefault(s => s.Id == id);
+            var song = _dbContext.Songs.SingleOrDefault(s => s.Id == id);
             _dbContext.SaveChanges();
         }
 
         public List<SongViewModel> GetAll(string query)
         {
-            var song = _dbContext.Songs;
+            var songs = _dbContext.Songs.ToList();
 
-            var songViewModel = song.Select(s => new SongViewModel(s.Id, s.Title, s.RegisteredAt)).ToList();
+            var songViewModel = _mapper.Map<List<SongViewModel>>(songs);
+
+            //var songViewModel = song.Select(s => new SongViewModel(s.Id, s.Title, s.RegisteredAt)).ToList();
 
             return songViewModel;
         }
 
         public SongViewModel GetById(int id)
         {
-            var song = _dbContext.Songs.FirstOrDefault(s => s.Id == id);
+            var song = _dbContext.Songs.SingleOrDefault(s => s.Id == id);
 
             if(song is null)
             {
                 return null;
             }
 
-            var songViewModel = new SongViewModel(song.Id, song.Title, song.RegisteredAt); 
+            var songViewModel = _mapper.Map<SongViewModel>(song);
+
+            //var songViewModel = new SongViewModel(song.Id, song.Title, song.RegisteredAt); 
 
             return songViewModel;
         }

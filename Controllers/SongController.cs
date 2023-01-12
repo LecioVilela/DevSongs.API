@@ -14,30 +14,28 @@ namespace DevSongs.API.Controllers
     {
         private readonly IMapper _mapper;
 
-        private readonly ISongRegisterService _registerService;
+        private readonly ISongService _service;
 
-        public SongController(IMapper mapper, ISongRegisterService registerService)
+        public SongController(IMapper mapper, ISongService registerService)
         {
             _mapper = mapper;
-            _registerService = registerService;
+            _service = registerService;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Get(string query)
         {
-            var song = _registerService.GetAll(query);
+            var songViewModel = _service.GetAll(query);      
 
-            return Ok(song);
+            return Ok(songViewModel);
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetById(int id)
         {
-            var song = new Song("Break Stuff", "Limp Bizkt", "None", "New Rock");
-
-            var songViewModel = _mapper.Map<SongViewModel>(song);
+            var songViewModel = _service.GetById(id);
 
             return Ok(songViewModel);
         }
@@ -46,16 +44,16 @@ namespace DevSongs.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] NewSongInputModel model)
         {
-            var id = _registerService.Create(model);
+            var id = _service.Create(model);
 
             return CreatedAtAction(nameof(GetById), new { id }, model);
         }
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> Update(UpdateSongInputModel model)
+        public async Task<IActionResult> Update([FromBody] UpdateSongInputModel model)
         {
-            var song = _mapper.Map<Song>(model);
+            _service.Update(model);
 
             return NoContent();
         }
@@ -64,6 +62,8 @@ namespace DevSongs.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(int id)
         {
+            _service.Delete(id);
+
             return NoContent();
         }
     }
