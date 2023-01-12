@@ -20,7 +20,7 @@ The API is working for creating, updating, deleting and getting.
 ```
 * Build the project with the command <strong>dotnet build</strong> at:
 ```
-   DevJobs.API
+   DevSongs.API
 ```
 * For debug:
 ```
@@ -28,5 +28,5 @@ The API is working for creating, updating, deleting and getting.
 ```
 * For requests like Postman or Insomnia:
 ```
-   dotnet run at DevJobs.Api
+   dotnet run at DevSongs.Api
 ```
