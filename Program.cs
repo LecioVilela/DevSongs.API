@@ -1,9 +1,17 @@
+using AutoMapper;
+using DevSongs.Application.Profiles;
+using DevSongs.Application.Services.Implementations;
+using DevSongs.Application.Services.Interfaces;
+using DevSongs.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddDbContext<DevSongsDbContext>(o => o.UseInMemoryDatabase("DevSongs"));
+builder.Services.AddAutoMapper(typeof(SongProfile));
+builder.Services.AddScoped<ISongRegisterService, SongRegisterService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
